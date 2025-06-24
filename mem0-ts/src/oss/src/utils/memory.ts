@@ -1,9 +1,13 @@
 import { OpenAILLM } from "../llms/openai";
-import { Message } from "../types";
+import { LLMConfig, Message } from "../types";
 
-const get_image_description = async (image_url: string) => {
+const get_image_description = async (
+  image_url: string,
+  visionConfig: LLMConfig = {}
+) => {
   const llm = new OpenAILLM({
-    apiKey: process.env.OPENAI_API_KEY,
+    ...visionConfig,
+    apiKey: visionConfig?.apiKey || process.env.OPENAI_API_KEY,
   });
   const response = await llm.generateResponse([
     {
@@ -19,7 +23,10 @@ const get_image_description = async (image_url: string) => {
   return response;
 };
 
-const parse_vision_messages = async (messages: Message[]) => {
+const parse_vision_messages = async (
+  messages: Message[],
+  visionConfig: LLMConfig = {}
+) => {
   const parsed_messages = [];
   for (const message of messages) {
     let new_message = {
@@ -33,6 +40,7 @@ const parse_vision_messages = async (messages: Message[]) => {
       ) {
         const description = await get_image_description(
           message.content.image_url.url,
+          visionConfig
         );
         new_message.content =
           typeof description === "string"

@@ -75,6 +75,9 @@ export interface MemoryConfig {
     provider: string;
     config: LLMConfig;
   };
+  vision?: {
+    config: LLMConfig;
+  };
   historyStore?: HistoryStoreConfig;
   disableHistory?: boolean;
   historyDbPath?: string;

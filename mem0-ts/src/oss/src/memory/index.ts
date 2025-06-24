@@ -185,7 +185,10 @@ export class Memory {
       ? (messages as Message[])
       : [{ role: "user", content: messages }];
 
-    const final_parsedMessages = await parse_vision_messages(parsedMessages);
+    const final_parsedMessages = await parse_vision_messages(
+      parsedMessages,
+      this.config.vision?.config
+    );
 
     // Add to vector store
     const vectorStoreResult = await this.addToVectorStore(
